@@ -1079,3 +1079,158 @@ finally:
 # Install pylint
 pip install pylint
 ```
+✅ Lambda Expressions
+- Lambda is a way to write small anonymous functions in Python.
+```python
+# Traditional function
+def square(num):
+    return num ** 2
+
+# Equivalent lambda expression
+square = lambda num: num ** 2
+```
+✅ map(function, iterable)
+- The map() function applies a given function to each item in an iterable (like a list) and returns a map object (which is an iterator).
+
+Example with a named function:
+```python
+def square(num):
+    return num ** 2
+
+my_nums = [1, 2, 3, 4, 5]
+for item in map(square, my_nums):
+    print(item)
+```
+✅ filter(function, iterable)
+- The filter() function filters items out of an iterable if they don't meet a condition defined by the function.
+```python
+my_nums = [1, 2, 3, 4, 5, 6]
+
+# Filter even numbers using lambda
+evens = list(filter(lambda num: num % 2 == 0, my_nums))
+print(evens)  # Output: [2, 4, 6]
+```
+✅ Nested Statements and Scope (LEGB Rule)
+- Python uses the LEGB rule to resolve variable names.
+  -- L: Local — Names assigned within a function (including lambda)
+  -- E: Enclosing — Names in the local scope of any enclosing functions
+  -- G: Global — Names assigned at the top-level of a module or declared global
+  -- B: Built-in — Names preassigned in Python (e.g., len, sum, etc.)
+```python
+x = "global"
+
+def outer():
+    x = "enclosing"
+    
+    def inner():
+        x = "local"
+        print(x)  # local
+
+    inner()
+    print(x)  # enclosing
+
+outer()
+print(x)  # global
+```
+- If a variable is not found in Local, Python checks Enclosing, then Global, then Built-in.
+📘 17. Decprators and Generators
+
+✅ Decorators
+🔍 What does "decorate" mean?
+- In Python, decorating a function means adding extra functionality to it without modifying the original function's code.
+- A decorator is just a function that takes another function as input and returns a new function with added behavior.
+
+✨ Example Breakdown
+```python
+def new_decorator(original_func):
+    def wrap_func():
+        print('Some extra code, before the original function')
+        original_func()
+        print('Some extra code, after the original function')
+    return wrap_func
+```
+- original_func: The function to be decorated.
+- wrap_func: The new function that wraps original_func with extra functionality.
+
+✅ Using the decorator manually
+```python
+def func_needs_decorator():
+    print("I want to be decorated!")
+
+decorated_func = new_decorator(func_needs_decorator)
+decorated_func()
+```
+
+✅ Using the @ decorator syntax (shortcut)
+```python
+@new_decorator
+def func_needs_decorator():
+    print("I want to be decorated!")
+
+func_needs_decorator()
+```
+This is equivalent to:
+
+```python
+func_needs_decorator = new_decorator(func_needs_decorator)
+```
+✅ Generators
+- Generators allow you to generate values lazily (one at a time, on demand), using the yield keyword instead of return.
+
+🔁 Normal function vs Generator
+### Regular function
+```python
+def create_cubes(n):
+    result = []
+    for x in range(n):
+        result.append(x**3)
+    return result
+```
+
+Returns the full list at once (memory-intensive for large n).
+```python
+# Generator version
+def create_cubes(n):
+    for x in range(n):
+        yield x**3
+```
+
+Yields one value at a time, saving memory.
+```python
+print(list(create_cubes(10)))  # [0, 1, 8, 27, 64, ...]
+```
+📈 Fibonacci Generator Example
+```python
+def gen_fibon(n):
+    a = 1
+    b = 1
+    for _ in range(n):
+        yield a
+        a, b = b, a + b
+
+for num in gen_fibon(10):
+    print(num)
+```
+
+Prints first 10 Fibonacci numbers.
+
+✅ iter() Function
+- iter() turns an iterable (like a list, tuple, string) into an iterator (which you can use with next()).
+
+Example:
+```python
+my_list = [1, 2, 3]
+my_iter = iter(my_list)
+print(next(my_iter))  # 1
+print(next(my_iter))  # 2
+print(next(my_iter))  # 3
+# print(next(my_iter))  # Raises StopIteration
+```
+✅ Summary Table
+
+| Feature       | Key Concept                               | Keyword Used |
+| ------------- | ----------------------------------------- | ------------ |
+| **Decorator** | Add functionality to existing functions   | `@decorator` |
+| **Generator** | Produce items lazily (one at a time)      | `yield`      |
+| **Iterator**  | Step through iterable data using `next()` | `iter()`     |
+
