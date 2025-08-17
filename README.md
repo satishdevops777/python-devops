@@ -1453,7 +1453,7 @@ blue.save("C:/Users/Downloads/modified.png")  # Use full path or relative
 | Add Alpha         | `.putalpha(value)`               |
 | Save Image        | `.save("path")`                  |
 
-## 20. Working with Emails
+## 📘 20. Working with Emails
 
 📧 Part 1: Sending Emails with Python
 - Python uses the smtplib (Simple Mail Transfer Protocol library) to send emails.
@@ -1581,3 +1581,188 @@ for part in email_message.walk():
 | Receiving Emails | `imaplib`, `email` | Connect to mailbox, search and read            |
 | Secure Inputs    | `getpass`          | Hides password in terminal                     |
 | Message Parsing  | `email.message`    | Helps extract content like subject, body, etc. |
+
+## 📘 21. PDFs and Emails
+
+🔹 Working with CSV files
+- CSV = Comma Separated Values → A plain text file where each row is a record, and values are separated by , or another delimiter (like ; or |).
+
+### 1. Using Python’s csv module
+- The csv module is built into Python.
+```python
+import csv
+
+# Open CSV file
+data = open('example.csv', encoding='utf-8')
+
+# Create a CSV reader object
+csv_data = csv.reader(data)
+
+# Convert to list of lists
+data_lines = list(csv_data)
+
+# Print the first row (header)
+print(data_lines[0])
+
+# Print first 5 rows
+for line in data_lines[:5]:
+    print(line)
+
+# Writing to a new CSV file
+file_to_output = open('to_save_file.csv', mode='w', newline='')
+csv_writer = csv.writer(file_to_output, delimiter=',')
+
+# Writing multiple rows
+csv_writer.writerows([
+    ['1', '2', '3'],
+    ['4', '5', '6']
+])
+
+file_to_output.close()
+```
+✅ Explanation:
+- csv.reader → Reads file row by row, splitting values by delimiter.
+- list(csv_data) → Converts reader into a list of lists.
+- csv.writer → Writes rows to new file.
+- delimiter=',' → Defines separator (default is ,).
+
+### 2. Using Pandas
+- Pandas is a full data analysis library. It is faster and easier for large datasets.
+```python
+import pandas as pd
+
+# Read CSV file
+df = pd.read_csv("example.csv")
+
+# Show first 5 rows
+print(df.head())
+
+# Select a column
+print(df['Name'])
+
+# Save DataFrame back to CSV
+df.to_csv("output.csv", index=False)
+```
+
+✅ Explanation:
+- pd.read_csv() → Loads CSV directly into a DataFrame (table-like object).
+- df.head() → Shows first 5 rows.
+- index=False → Prevents Pandas from writing row numbers.
+
+### 3. Openpyxl (Excel)
+
+For .xlsx (Excel) files.
+
+```python
+from openpyxl import Workbook, load_workbook
+
+# Create new Excel file
+wb = Workbook()
+ws = wb.active
+ws['A1'] = "Hello"
+ws.append([1, 2, 3])
+wb.save("example.xlsx")
+
+# Read Excel file
+wb = load_workbook("example.xlsx")
+ws = wb.active
+print(ws['A1'].value)
+```
+
+✅ Explanation:
+- Workbook() → Creates a new Excel workbook.
+- load_workbook() → Opens an existing Excel file.
+- .append() → Adds a row.
+
+### 4. Google Sheets API
+- Lets you work with Google Sheets directly from Python.
+
+Steps:
+- Enable Google Sheets API in Google Cloud Console.
+- Install gspread → pip install gspread oauth2client.
+- Authenticate with service account JSON.
+
+Example:
+```python
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
+
+# Define scope
+scope = ["https://spreadsheets.google.com/feeds",
+         "https://www.googleapis.com/auth/drive"]
+
+# Authenticate
+creds = ServiceAccountCredentials.from_json_keyfile_name("creds.json", scope)
+client = gspread.authorize(creds)
+
+# Open sheet
+sheet = client.open("MySheet").sheet1  
+
+# Get data
+data = sheet.get_all_records()
+print(data)
+
+# Insert a row
+sheet.insert_row(["Satish", "27", "India"], 2)
+```
+✅ Explanation:
+
+- creds.json → Service account credentials.
+- .sheet1 → Refers to the first sheet.
+- .get_all_records() → Reads everything into list of dictionaries.
+
+🔹 Working with PDF files
+    - We use PyPDF2.
+
+1. Reading a PDF
+```python
+import PyPDF2
+
+# Open PDF file in read-binary mode
+f = open("mypdf.pdf", "rb")
+
+# Create reader object
+pdf_reader = PyPDF2.PdfReader(f)
+
+# Get number of pages
+print(len(pdf_reader.pages))
+
+# Extract text from first page
+page_one = pdf_reader.pages[0]
+print(page_one.extract_text())
+
+f.close()
+```
+✅ Explanation:
+
+- "rb" → read binary.
+- .pages → list of pages.
+- .extract_text() → extracts text.
+
+2. Writing/Creating a PDF
+
+```python
+import PyPDF2
+
+# Create a new PDF writer
+pdf_writer = PyPDF2.PdfWriter()
+
+# Add a blank page (width=200, height=200)
+pdf_writer.add_blank_page(width=200, height=200)
+
+# Save it
+with open("newfile.pdf", "wb") as f:
+    pdf_writer.write(f)
+```
+✅ Explanation:
+
+- PdfWriter() → Used to create/modify PDFs.
+- .add_blank_page() → Adds an empty page.
+- .write(f) → Saves PDF.
+
+🔑 Summary
+- csv module → Basic reading/writing CSVs.
+- Pandas → Powerful tabular data analysis.
+- Openpyxl → Excel automation.
+- Google Sheets API → Cloud spreadsheet manipulation.
+- PyPDF2 → Read/write PDFs.
