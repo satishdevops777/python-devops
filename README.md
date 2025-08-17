@@ -1755,7 +1755,6 @@ with open("newfile.pdf", "wb") as f:
     pdf_writer.write(f)
 ```
 ✅ Explanation:
-
 - PdfWriter() → Used to create/modify PDFs.
 - .add_blank_page() → Adds an empty page.
 - .write(f) → Saves PDF.
