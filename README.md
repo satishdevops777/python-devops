@@ -1235,7 +1235,7 @@ print(next(my_iter))  # 3
 | **Generator** | Produce items lazily (one at a time)      | `yield`      |
 | **Iterator**  | Step through iterable data using `next()` | `iter()`     |
 
-## 📘 17. Python Web Scraping 
+## 📘 18. Python Web Scraping 
 - requests to fetch webpage content
 - BeautifulSoup to parse and extract HTML data
 ```bash
@@ -1352,3 +1352,103 @@ with open("output.html", "w", encoding="utf-8") as f:
 | Submit data      | `requests.post()`       | Send login/data                |
 | Maintain session | `requests.Session()`    | Store cookies between requests |
 
+## 📘 19. Working with Images
+
+📦 1. Installing Pillow
+  - To work with images, first install Pillow (a modern fork of PIL):
+    ```python
+    pip install pillow
+    ```
+    📘 Official Docs: pillow.readthedocs.io
+    
+🖼️ 2. Opening and Inspecting an Image
+ ```python
+    from PIL import Image  # Import Image class from Pillow
+    
+    # Open the image file
+    mac = Image.open('example.jpg')  # Replace with your image path
+    
+    # Check the type
+    print(type(mac))  # <class 'PIL.JpegImagePlugin.JpegImageFile'>
+    
+    # Show the image in default viewer
+    mac.show()
+    
+    # Get basic properties
+    print(mac.size)                # Output: (width, height)
+    print(mac.filename)            # 'example.jpg'
+    print(mac.format_description)  # e.g., 'JPEG (ISO 10918)'
+ ```   
+✂️ 3. Cropping an Image
+ 
+ ```python
+    # Define the crop box as a tuple (left, top, right, bottom)
+    # (X, Y, W, H) → (left, upper, right, lower)
+    cropped = mac.crop((0, 0, 100, 100))  # Crop top-left 100x100 px
+    cropped.show()
+ ```   
+ 💡 Note: The crop box is not (X, Y, Width, Height), but rather a box defined by top-left and bottom-right coordinates.
+
+📌 4. Pasting One Image into Another
+```python
+# Crop a portion from the image
+piece = mac.crop((0, 0, 100, 100))
+
+# Paste that piece into the original at position (0, 0)
+mac.paste(im=piece, box=(0, 0))  # Overwrites the top-left of the image
+mac.show()
+```
+🔄 5. Rotating and Resizing
+```python
+# Rotate image by 90 degrees
+rotated = mac.rotate(90)  # Counter-clockwise
+rotated.show()
+
+# Resize image to 300x500 pixels
+resized = mac.resize((300, 500))
+resized.show()
+```
+🎨 6. Color and Transparency (RGBA)
+- RGBA stands for Red, Green, Blue, Alpha
+- Alpha controls transparency (0 is fully transparent, 255 is fully opaque)
+
+🔴 Adding Transparency to a Red Image
+```python
+# Create a red RGBA image (100x100 px)
+red = Image.new("RGBA", (100, 100), color=(255, 0, 0, 255))  # Opaque red
+
+# Adjust transparency
+red.putalpha(128)  # Set alpha to 50% transparent
+red.show()
+```
+🔵 Pasting Red onto Blue with Mask
+```python
+# Create a blue background
+blue = Image.new("RGBA", (300, 300), color=(0, 0, 255, 255))
+
+# Paste red onto blue using red as a mask (uses alpha channel)
+blue.paste(im=red, box=(0, 0), mask=red)
+blue.show()
+```
+
+💾 7. Saving Images
+```python
+# Save the modified image
+blue.save("C:/Users/Downloads/modified.png")  # Use full path or relative
+```
+📌 Make sure the directory exists, or Python will throw a FileNotFoundError.
+
+🧠 Summary Table:
+
+| Task              | Function Used                    |
+| ----------------- | -------------------------------- |
+| Open Image        | `Image.open()`                   |
+| Show Image        | `.show()`                        |
+| Get Size          | `.size`                          |
+| Crop Image        | `.crop((x1,y1,x2,y2))`           |
+| Paste Image       | `.paste(im, box)`                |
+| Rotate Image      | `.rotate(degrees)`               |
+| Resize Image      | `.resize((w,h))`                 |
+| Create RGBA Image | `Image.new("RGBA", size, color)` |
+| Add Alpha         | `.putalpha(value)`               |
+| Save Image        | `.save("path")`                  |
