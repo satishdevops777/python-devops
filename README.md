@@ -1979,3 +1979,152 @@ display(dropdown, checkbox, text)
 - fixed() → Keep a parameter constant.
 - widgets.Dropdown / Checkbox / Text → Manual widgets.
 - display() → Shows widget/output inline in Jupyter.
+
+
+# Modules
+
+# os module and shutil allow us to easily navigate files and directories on the computer and then perform actions on them such as moving or deleting them
+
+import os
+os.getcwd()
+os.listdir()
+os.unlink(path) #delete a single file
+os.rmdir(dirname) # Delete directory
+os.walk()
+
+for folder, sub_folder,files in os.walk(os.getcwd()):
+    print(f"currently looking at {folder}")
+    print('\n')
+    print('The sub folders are: ')
+    for sub_fold in subfolders:
+        print(f"\t subfolder: {sub_folder}")
+    print('\n')
+    print("the files are: ")
+    for f in files:
+        print(f"file: {f}")
+    print('\n')
+    
+
+
+import shutil
+shutil.move('source.txt', 'destdir')
+
+
+import send2trash
+send2trash.send2trash('filename')
+
+
+# Datetime module
+
+import datetime
+from datetime import datetime
+
+datetime.time() # datetime.time(2,20)
+datetime.date.today()
+today.month
+today.year
+today.day
+today.ctime()
+
+from datetime import datetime
+
+from datetime import date
+
+date1 = date(2021,11,3)
+date2 = date(2020,11,3)
+(date1 - date2).days
+
+import math
+help(math)
+math.floor(4.35) # 4
+math.ceil(4.35) # 5
+math.pi
+from math import pi
+math.e
+math.log(math.e)
+math.sin(10)
+math.degrees(pi/2)
+
+import random
+random.randint(0,100)
+radom.seed(42)
+random.shuffle(mylist)
+
+
+# python debugger
+
+import pdb
+x = [1,2,3]
+y = 2
+z = 3
+result = y+z
+pdb.set_trace()
+result1 = x+z
+
+
+# Regular Expression
+
+# simple email format can be name@gmail.com
+# pattern "text" + "@" + "text" +".com"
+# regex pattern r"(\d\d\d)-\d\d\d-\d\d\d"
+
+text = "the agent phone number is 408-5555-123"
+
+'phone' in text
+
+import re
+re.search(pattern,text)
+re.search('phone',text)
+re.findall('phone',text)
+re.span(), re.finditer('phone',text)
+
+# Regular expression pattern
+\d - digit # file_25 - file_\d\d
+\w - Alphanumeric # \w-\w\w\w - A-b_1
+\s - white space  #aa\sb\sc - a b c
+\D - A non-digit # \D\D\D - ABC
+\W - Non-alphanumeric \W\W\W\W - *-+=
+\S - Non-whitespace  \S\S\S\S yoyo
+
+
+# Quantifiers
++ - occurs one time - \w-\w+ - A-b1_1
+{3} - occurs exactly 3 times - \D{3} - abc
+{2,4} occurs 2 to 4 times - \d{2,4} - 123
+{3,} - occurs 3 or more - \w{3,} - anycharcs
+* occurs zero or more times - ABC* - AAACC
+? Once or none - plurals? - plural
+
+# Examples
+phone = re.search(r'\d{3}-\d{3}-\d{4}',text)
+
+# Additional Regex Syntax
+
+re.search(r'cat|dog,' 'The dog is here')
+re.findall(r'at','the cat in the hat sat there')
+re.findall(r'^\d', '1 is a number')
+re.findall(r'[^\d]')
+
+# Code
+import time
+
+# Current time
+start_time = time.time()
+end_time = time.time()
+elapsed_time = end_time- start_time
+print(elapsed_time)
+
+
+# Zipping and Unzipping Files
+
+import zipfile
+comp_file = zipfile.zipfile('comp_file.zip','w')
+
+comp_file.write('fileone.txt',compress_type=zipfile.ZIP_DEFLATED)
+
+import shutil
+dir_to_zip ='path'
+output_filename = 'example'
+shutil.make_archive(output_filename,'zip',dir_to_zip)
+shutil.unpack_archive('example.zip','final_unzip','zip')
+
