@@ -1452,3 +1452,132 @@ blue.save("C:/Users/Downloads/modified.png")  # Use full path or relative
 | Create RGBA Image | `Image.new("RGBA", size, color)` |
 | Add Alpha         | `.putalpha(value)`               |
 | Save Image        | `.save("path")`                  |
+
+## 20. Working with Emails
+
+📧 Part 1: Sending Emails with Python
+- Python uses the smtplib (Simple Mail Transfer Protocol library) to send emails.
+
+🔐 Pre-requisites:
+- A Gmail (or other) email account
+- “Less secure app access” or App Password enabled if using Gmail with 2FA
+
+✅ Step-by-step code and explanation:
+```python
+import smtplib  # Module to send emails using SMTP (Simple Mail Transfer Protocol)
+import getpass  # Module to securely input passwords without showing them
+
+# 1. Connect to Gmail's SMTP server at port 587
+smtp_object = smtplib.SMTP('smtp.gmail.com', 587)  # Use port 587 for TLS encryption
+
+# 2. Send the 'EHLO' (Extended Hello) to initiate the connection
+smtp_object.ehlo()
+
+# 3. Start TLS encryption
+smtp_object.starttls()
+
+# 4. Securely ask for login credentials
+email = getpass.getpass("Enter your email: ")
+password = getpass.getpass("Enter your password or app password: ")
+
+# 5. Log in using your credentials
+smtp_object.login(email, password)
+
+# 6. Set sender and receiver email
+from_address = email
+to_address = input("Enter recipient's email: ")
+
+# 7. Get email subject and body
+subject = input("Enter the subject line: ")
+message = input("Enter the body of the email: ")
+
+# 8. Format message correctly
+msg = "Subject: " + subject + "\n" + message  # Separate subject and body with a newline
+
+# 9. Send the email
+smtp_object.sendmail(from_address, to_address, msg)
+
+# 10. End the SMTP session
+smtp_object.quit()
+```
+💡 Notes:
+- ehlo() tells the server we want to communicate using extended SMTP
+- starttls() upgrades the connection to secure TLS
+- Use App Passwords instead of your Gmail password if 2FA is on
+
+📨 Part 2: Receiving Emails with Python
+
+- To receive and read emails, use:
+  -- imaplib → Connect to mail server
+  -- email module → Parse message content
+
+✅ Step-by-step code and explanation:
+```python
+import imaplib       # For connecting to IMAP mail servers
+import getpass       # For secure password input
+import email         # To parse email content
+
+# 1. Connect to Gmail's IMAP server
+mail = imaplib.IMAP4_SSL('imap.gmail.com')  # SSL connection for secure access
+
+# 2. Login to the email account
+email_user = getpass.getpass("Email: ")
+email_pass = getpass.getpass("Password or App Password: ")
+mail.login(email_user, email_pass)
+
+# 3. List mailboxes
+mail.list()  # Returns all folders like INBOX, SENT, etc.
+
+# 4. Select the mailbox to use (INBOX in this case)
+mail.select('inbox')  # You can select other folders too
+
+# 5. Search for specific emails (example: all before Nov 2000 with specific subject)
+typ, data = mail.search(None, 'BEFORE 01-NOV-2000', 'SUBJECT "NEW 8TEST PYTHON"')
+
+# 6. Get email IDs
+email_ids = data[0].split()  # Splits all matching email IDs into a list
+
+# 7. Fetch the latest matching email (optional: you can loop over all)
+latest_email_id = email_ids[-1]  # Get the last (most recent) email ID from search result
+result, email_data = mail.fetch(latest_email_id, '(RFC822)')  # Fetch full email content
+
+# 8. Parse the raw email content
+raw_email = email_data[0][1]  # Get raw bytes of the email
+raw_email_string = raw_email.decode('utf-8')  # Decode to readable string
+
+# 9. Use email module to create a structured message object
+email_message = email.message_from_string(raw_email_string)
+
+# 10. Walk through each part (text, HTML, attachments, etc.)
+for part in email_message.walk():
+    if part.get_content_type() == 'text/plain':  # Only extract plain text part
+        body = part.get_payload(decode=True)  # Decode content
+        print("Email Body:\n", body.decode())  # Decode bytes to string and print
+```
+💡 Notes:
+
+| Step                          | Function                                     | Purpose |
+| ----------------------------- | -------------------------------------------- | ------- |
+| `imaplib.IMAP4_SSL()`         | Connect securely to IMAP server              |         |
+| `login()`                     | Log in to email account                      |         |
+| `list()`                      | List mail folders                            |         |
+| `select('inbox')`             | Select inbox                                 |         |
+| `search()`                    | Filter emails by date, sender, subject, etc. |         |
+| `fetch()`                     | Retrieve specific email by ID                |         |
+| `email.message_from_string()` | Converts raw email to a Python object        |         |
+| `get_payload()`               | Extracts the body/content of the message     |         |
+
+🔐 Security Tips
+
+- Use app passwords, not your actual Gmail password.
+- Never hardcode credentials in your script.
+- Use getpass to hide passwords in CLI.
+- If automating, consider using a secure secret store (like AWS Secrets Manager or .env files + python-dotenv).
+
+🧠 Summary
+| Task             | Library            | Description                                    |
+| ---------------- | ------------------ | ---------------------------------------------- |
+| Sending Emails   | `smtplib`          | Login, connect to SMTP server, send            |
+| Receiving Emails | `imaplib`, `email` | Connect to mailbox, search and read            |
+| Secure Inputs    | `getpass`          | Hides password in terminal                     |
+| Message Parsing  | `email.message`    | Helps extract content like subject, body, etc. |
