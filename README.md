@@ -1765,3 +1765,217 @@ with open("newfile.pdf", "wb") as f:
 - Openpyxl → Excel automation.
 - Google Sheets API → Cloud spreadsheet manipulation.
 - PyPDF2 → Read/write PDFs.
+
+## 📘 22. Advanced python objects and data structures
+🔹 Advanced Numbers in Python
+- Numbers can be manipulated with built-in functions.
+```python
+print(hex(8))       # 0x8
+print(bin(78))      # 0b1001110
+print(pow(2, 4))    # 16 (same as 2**4)
+print(abs(-3))      # 3
+print(round(3.9))   # 4
+print(round(3.9890, 2))  # 3.99
+```
+✅ Explanation:
+- hex(8) → Converts number into hexadecimal string (0x8).
+- bin(78) → Converts number into binary (0b1001110).
+- pow(2,4) → Raises number to power → 2^4 = 16.
+- abs(-3) → Returns absolute value → distance from zero.
+- round(3.9) → Rounds to nearest integer → 4.
+- round(3.9890,2) → Rounds to 2 decimals → 3.99.
+
+🔹 Advanced Strings
+- Strings have many formatting and query methods.
+```python
+- s = "Hello"
+
+print(s.center(20, 'z'))  # zzzzzzzHellozzzzzzz
+print(s.endswith('o'))    # True
+```
+✅ Explanation:
+- s.center(20, 'z') → Puts string in the middle of width=20, fills empty space with 'z'.
+- s.endswith('o') → Checks if string ends with 'o'. Returns True/False.
+
+🔹 Advanced Sets
+- Sets are unordered collections with no duplicates.
+```python
+s = {1, 2, 3}
+s.add(4)
+print(s)   # {1, 2, 3, 4}
+
+s.clear()
+print(s)   # set() → now empty
+
+s = {1, 2, 4}
+sc = s.copy()
+print(sc)  # {1, 2, 4}
+
+print(s.difference(sc))  # set() → no difference
+
+s.discard(2)
+print(s)   # {1, 4}
+
+s1 = {1, 2, 3}
+s2 = {2, 3, 4}
+print(s1.intersection(s2))       # {2, 3}
+print(s1.issubset(s2))           # False
+print(s1.symmetric_difference(s2)) # {1, 4}
+```
+✅ Explanation:
+
+- .add(x) → Adds element.
+- .clear() → Empties set.
+- .copy() → Creates a copy.
+- .difference() → Elements only in first set.
+- .discard(x) → Removes element if exists (no error if missing).
+- .intersection() → Common elements.
+- .issubset() → Checks if one set is fully contained in another.
+- .symmetric_difference() → Elements in either set, but not both.
+
+🔹 Advanced Dictionaries
+- Dictionaries are key-value pairs. We can build them with comprehensions.
+```python
+# Squares from 0 to 9
+squares = {x: x**2 for x in range(10)}
+print(squares)
+# {0:0, 1:1, 2:4, 3:9, ..., 9:81}
+
+# Map keys ['a','b'] with values squared
+mapping = {k: v**2 for k, v in zip(['a','b'], range(2))}
+print(mapping)
+# {'a':0, 'b':1}
+```
+✅ Explanation:
+- {x: x**2 for x in range(10)} → Dictionary comprehension.
+- zip(['a','b'], range(2)) → pairs ('a',0), ('b',1).
+
+🔹 Advanced Lists
+- Lists are ordered and mutable (can be modified).
+```python
+l = [1, 2, 3, 10]
+
+l.append([4, 5])
+print(l)   # [1, 2, 3, 10, [4, 5]]
+
+print(l.index(10))   # 3 → position of element 10
+
+l.insert(2, 'hey')
+print(l)   # [1, 2, 'hey', 3, 10, [4,5]]
+
+l.remove('hey')
+print(l)   # [1, 2, 3, 10, [4, 5]]
+
+l.reverse()
+print(l)   # [[4,5], 10, 3, 2, 1]
+
+popped = l.pop()
+print(popped)  # 1
+print(l)       # [[4,5], 10, 3, 2]
+
+nums = [3, 1, 4, 2]
+nums.sort()
+print(nums)    # [1, 2, 3, 4]
+```
+✅ Explanation:
+- .append([4,5]) → Adds list as single element at end.
+- .index(x) → Finds position of x.
+- .insert(pos, val) → Inserts value at given index.
+- .remove(val) → Removes first occurrence of value.
+- .reverse() → Reverses list order.
+- .pop() → Removes last element and returns it.
+- .sort() → Sorts list in ascending order.
+📝 Summary Table
+
+| Category | Example                       | Meaning            |
+| -------- | ----------------------------- | ------------------ |
+| Numbers  | `hex(8)`                      | Convert to hex     |
+| Strings  | `"Hi".center(10,'-')`         | Center text        |
+| Sets     | `s.intersection(s2)`          | Common elements    |
+| Dict     | `{x: x**2 for x in range(5)}` | Dict comprehension |
+| Lists    | `l.insert(2,'x')`             | Insert at index    |
+
+## 📘 23. Introduction to GUIs in Python
+
+✅ 1. Installation
+- If widgets don’t load:
+```python
+pip install -U ipywidgets
+jupyter nbextension enable --py widgetsnbextension
+```
+✅ 2. Basic Example with interact
+```python
+from ipywidgets import interact
+
+def func(x):
+    return x
+
+interact(func, x=10)
+```
+🔎 Explanation:
+
+- interact(func, x=10) → Creates a widget automatically:
+- Since x=10 is an int, it creates a slider.
+- When you move the slider, it calls func(x) with the new value.
+
+✅ 3. Interactive Function with Multiple Inputs
+```python
+from ipywidgets import interact
+
+def f(a, b):
+    return a + b
+
+interact(f, a=5, b=10)
+```
+🔎 Explanation:
+- Both a and b get sliders.
+- Adjusting them shows the sum live.
+
+✅ 4. Using fixed to Lock a Value
+```python
+from ipywidgets import interact, fixed
+
+def f(x, y):
+    return x * y
+
+interact(f, x=10, y=fixed(5))
+```
+🔎 Explanation:
+- fixed(5) → Locks y=5.
+- Only x has a slider.
+
+✅ 5. Dropdown, Checkbox, Text Widgets
+```python
+import ipywidgets as widgets
+from IPython.display import display
+
+dropdown = widgets.Dropdown(
+    options=['DevOps', 'Cloud', 'Python'],
+    value='Python',
+    description='Course:',
+)
+
+checkbox = widgets.Checkbox(
+    value=True,
+    description='Subscribe'
+)
+
+text = widgets.Text(
+    value='Satish',
+    description='Name:',
+)
+
+# Show them
+display(dropdown, checkbox, text)
+```
+🔎 Explanation:
+
+- Dropdown → Creates a dropdown list.
+- Checkbox → Creates a checkbox.
+- Text → Input box for text.
+
+🔑 Summary
+- interact(func, x=10) → Auto widget based on type.
+- fixed() → Keep a parameter constant.
+- widgets.Dropdown / Checkbox / Text → Manual widgets.
+- display() → Shows widget/output inline in Jupyter.
