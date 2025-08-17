@@ -1133,7 +1133,8 @@ outer()
 print(x)  # global
 ```
 - If a variable is not found in Local, Python checks Enclosing, then Global, then Built-in.
-📘 17. Decprators and Generators
+
+## 📘 17. Decprators and Generators
 
 ✅ Decorators
 🔍 What does "decorate" mean?
@@ -1233,4 +1234,121 @@ print(next(my_iter))  # 3
 | **Decorator** | Add functionality to existing functions   | `@decorator` |
 | **Generator** | Produce items lazily (one at a time)      | `yield`      |
 | **Iterator**  | Step through iterable data using `next()` | `iter()`     |
+
+## 📘 17. Python Web Scraping 
+- requests to fetch webpage content
+- BeautifulSoup to parse and extract HTML data
+```bash
+pip install requests beautifulsoup4 lxml
+```
+```python
+import requests
+result = requests.get("https://www.google.com")
+print(result.text)  # Raw HTML from the page
+```
+
+```python
+from bs4 import BeautifulSoup
+soup = BeautifulSoup(result.text, "lxml")
+print(soup.select('title')[0].getText())  # Extract the page title
+```
+
+### Element Selectors:
+```python
+soup.select('div'): All <div> tags
+soup.select('#id'): Elements with a specific id
+soup.select('.class'): Elements with a specific class
+soup.select('div span'): Any <span> inside a <div>
+soup.select('div > span'): Direct children only
+```
+
+🔹 Example: Scraping a simple page title
+```python
+# 1. Import the required libraries
+import requests                      # To make HTTP requests
+from bs4 import BeautifulSoup        # To parse and extract content from HTML
+
+# 2. Define the URL you want to scrape
+url = "https://www.example.com"
+
+# 3. Make a GET request to fetch the HTML content of the page
+response = requests.get(url)        # Sends an HTTP GET request
+print(response.status_code)         # Check if request was successful (200 = OK)
+
+# 4. Parse the HTML using BeautifulSoup
+soup = BeautifulSoup(response.text, "lxml")  # Parse the HTML with lxml parser
+
+# 5. Extract the <title> tag text
+title_tag = soup.select_one("title")  # Selects the first <title> element
+print("Page Title:", title_tag.getText())    # Extracts and prints the text inside <title>
+```
+
+🔐 Passing Data (Form Inputs) and Credentials
+- You might want to log in, search, or submit a form. You can do this by sending data with a POST request.
+  
+🔸 Example: Submitting form data with POST
+  - Let’s say you’re submitting a login form.
+```python
+import requests
+
+# URL to send the form POST request to (e.g., login form action URL)
+login_url = "https://example.com/login"
+
+# The form data (key names must match the form's input names)
+payload = {
+    'username': 'your_username',
+    'password': 'your_password'
+}
+
+# Create a session object to persist cookies
+session = requests.Session()
+
+# Send a POST request with the form data
+response = session.post(login_url, data=payload)
+
+# Print response status to check if login was successful
+print("Login response:", response.status_code)
+```
+🔒 If login is successful, the session object will hold the cookies. You can now scrape protected pages:
+```python
+protected_url = "https://example.com/dashboard"
+dashboard = session.get(protected_url)
+
+print("Dashboard status:", dashboard.status_code)
+print(dashboard.text[:500])  # Print the first 500 characters of the page
+```
+🔍 CSS Selectors for Data Extraction
+```python
+soup.select('div')         # All <div> tags
+soup.select('#main')       # Element with id="main"
+soup.select('.container')  # Elements with class="container"
+soup.select('div > p')     # <p> directly inside <div>
+soup.select('div span')    # Any <span> inside a <div>
+```
+Use .getText() or .attrs to get data:
+```python
+soup.select_one('a').getText()         # Text inside the first <a>
+soup.select_one('a')['href']           # href attribute of first <a>
+```
+
+🛡️ Tips to Avoid Blocking
+
+- Always use custom headers (User-Agent)
+- Add delays between requests (time.sleep())
+- Rotate proxies/IP addresses for heavy scraping
+- Respect robots.txt and terms of service
+
+📁 Optional: Export to File
+```python
+with open("output.html", "w", encoding="utf-8") as f:
+    f.write(response.text)
+```
+✅ Summary
+| Task             | Tool                    | Description                    |
+| ---------------- | ----------------------- | ------------------------------ |
+| Fetch page       | `requests.get()`        | Gets raw HTML                  |
+| Parse HTML       | `BeautifulSoup`         | Navigates HTML like a DOM      |
+| Extract data     | `select()`, `getText()` | Grab tags, attributes          |
+| Submit data      | `requests.post()`       | Send login/data                |
+| Maintain session | `requests.Session()`    | Store cookies between requests |
 
